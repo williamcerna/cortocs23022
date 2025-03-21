@@ -1,12 +1,30 @@
-# Etapa de compilación
-FROM openjdk:17 AS build
-WORKDIR /app
-COPY . . 
-RUN chmod +x mvnw && ./mvnw clean package -DskipTests
+# Usar una imagen base de OpenJDK
+FROM openjdk:17-jdk AS build
 
-# Etapa de ejecución
-FROM openjdk:17
+# Establecer el directorio de trabajo dentro del contenedor
 WORKDIR /app
-COPY --from=build /app/target/*.jar /app/app.jar  
+
+# Copiar archivos de Maven y el proyecto
+COPY .mvn .mvn
+COPY mvnw pom.xml ./
+COPY src src
+
+# Dar permisos de ejecución 
+RUN chmod +x mvnw
+
+# Construir la aplicación
+RUN ./mvnw clean package -DskipTests
+
+# Ejecutar la aplicación
+FROM eclipse-temurin:17-jdk
+
+WORKDIR /app
+
+# Copiar el JAR 
+COPY --from=build /app/target/*.jar app.jar
+
+# Exponer el puerto de la aplicación
 EXPOSE 8080
-CMD ["java", "-jar", "/app/app.jar"]
+
+# Ejecutar la aplicación
+CMD ["java", "-jar", "app.jar"]
