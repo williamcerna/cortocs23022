@@ -21,10 +21,11 @@ public class PageEmailController {
         Email emailToSave = new Email(email,random.nextBoolean());
         
         //Agregar logica para guardar el objeto emailToSave en la base de datos
+        Email savedEmail=emailRepository.save(emailToSave);
         // y al mismo tiempo regresar el objeto guardado
         //Y retornarlo en lugar de new Email();
-
+return savedEmail;
         return new Email();
-    }
+    } 
     
 }

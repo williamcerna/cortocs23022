@@ -10,7 +10,7 @@ public class Email {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @Column(name = "email")
+    @Column(name = "CS23022")
     private String email;
     
     @Column(name = "aprobado")
